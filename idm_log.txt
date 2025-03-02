@@ -1,1 +1,32 @@
 2025-03-02 17:31:15,172 - INFO - Error downloading video from https://www.youtube.com/watch?v=5TuyvUx7qig: ERROR: [download] Got error: ("Connection broken: ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)", ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+2025-03-02 18:18:07,800 [INFO] Starting download: watch?v=5TuyvUx7qig
+2025-03-02 18:18:09,441 [INFO] Segment download error [C:/Users/krish/OneDrive/Desktop\watch?v=5TuyvUx7qig.part_236985-473969]: [Errno 22] Invalid argument: 'C:/Users/krish/OneDrive/Desktop\\watch?v=5TuyvUx7qig.part_236985-473969'
+2025-03-02 18:18:09,462 [INFO] Segment download error [C:/Users/krish/OneDrive/Desktop\watch?v=5TuyvUx7qig.part_473970-710954]: [Errno 22] Invalid argument: 'C:/Users/krish/OneDrive/Desktop\\watch?v=5TuyvUx7qig.part_473970-710954'
+2025-03-02 18:18:09,474 [INFO] Segment download error [C:/Users/krish/OneDrive/Desktop\watch?v=5TuyvUx7qig.part_0-236984]: [Errno 22] Invalid argument: 'C:/Users/krish/OneDrive/Desktop\\watch?v=5TuyvUx7qig.part_0-236984'
+2025-03-02 18:18:09,521 [INFO] Segment download error [C:/Users/krish/OneDrive/Desktop\watch?v=5TuyvUx7qig.part_710955-947939]: [Errno 22] Invalid argument: 'C:/Users/krish/OneDrive/Desktop\\watch?v=5TuyvUx7qig.part_710955-947939'
+2025-03-02 18:18:47,745 [INFO] Stopped: watch?v=5TuyvUx7qig
+2025-03-02 18:19:10,336 [INFO] Starting download: 
+2025-03-02 18:19:10,381 [INFO] Error fetching file size for : Invalid URL '': No scheme supplied. Perhaps you meant https://?
+2025-03-02 18:19:10,391 [INFO] Segment download error [E:/.part_0-end]: Invalid URL '': No scheme supplied. Perhaps you meant https://?
+2025-03-02 18:19:31,202 [INFO] Stopped: 
+2025-03-02 18:20:16,869 [INFO] Starting download: 
+2025-03-02 18:20:16,924 [INFO] Error fetching file size for : Invalid URL '': No scheme supplied. Perhaps you meant https://?
+2025-03-02 18:20:16,928 [INFO] Segment download error [C:/Users/krish/Downloads/Compressed\.part_0-end]: Invalid URL '': No scheme supplied. Perhaps you meant https://?
+2025-03-02 18:26:11,055 [INFO] Starting download: watch?v=5TuyvUx7qig
+2025-03-02 18:26:12,696 [INFO] Segment download error [C:/Users/krish/OneDrive/Desktop/workspace\watch?v=5TuyvUx7qig.part_0-234811]: [Errno 22] Invalid argument: 'C:/Users/krish/OneDrive/Desktop/workspace\\watch?v=5TuyvUx7qig.part_0-234811'
+2025-03-02 18:26:12,752 [INFO] Segment download error [C:/Users/krish/OneDrive/Desktop/workspace\watch?v=5TuyvUx7qig.part_704436-939250]: [Errno 22] Invalid argument: 'C:/Users/krish/OneDrive/Desktop/workspace\\watch?v=5TuyvUx7qig.part_704436-939250'
+2025-03-02 18:26:12,767 [INFO] Segment download error [C:/Users/krish/OneDrive/Desktop/workspace\watch?v=5TuyvUx7qig.part_234812-469623]: [Errno 22] Invalid argument: 'C:/Users/krish/OneDrive/Desktop/workspace\\watch?v=5TuyvUx7qig.part_234812-469623'
+2025-03-02 18:26:12,773 [INFO] Segment download error [C:/Users/krish/OneDrive/Desktop/workspace\watch?v=5TuyvUx7qig.part_469624-704435]: [Errno 22] Invalid argument: 'C:/Users/krish/OneDrive/Desktop/workspace\\watch?v=5TuyvUx7qig.part_469624-704435'
+2025-03-02 18:27:03,991 [INFO] Stopped: watch?v=5TuyvUx7qig
+2025-03-02 18:28:07,223 [INFO] Starting download: watch?v=5TuyvUx7qig
+2025-03-02 18:28:08,877 [INFO] Segment download error [C:\Users\krish\OneDrive\Desktop\workspace\watch?v=5TuyvUx7qig.part_232677-465353]: [Errno 22] Invalid argument: 'C:\\Users\\krish\\OneDrive\\Desktop\\workspace\\watch?v=5TuyvUx7qig.part_232677-465353'
+2025-03-02 18:28:08,881 [INFO] Segment download error [C:\Users\krish\OneDrive\Desktop\workspace\watch?v=5TuyvUx7qig.part_698031-930709]: [Errno 22] Invalid argument: 'C:\\Users\\krish\\OneDrive\\Desktop\\workspace\\watch?v=5TuyvUx7qig.part_698031-930709'
+2025-03-02 18:28:08,899 [INFO] Segment download error [C:\Users\krish\OneDrive\Desktop\workspace\watch?v=5TuyvUx7qig.part_465354-698030]: [Errno 22] Invalid argument: 'C:\\Users\\krish\\OneDrive\\Desktop\\workspace\\watch?v=5TuyvUx7qig.part_465354-698030'
+2025-03-02 18:28:08,903 [INFO] Segment download error [C:\Users\krish\OneDrive\Desktop\workspace\watch?v=5TuyvUx7qig.part_0-232676]: [Errno 22] Invalid argument: 'C:\\Users\\krish\\OneDrive\\Desktop\\workspace\\watch?v=5TuyvUx7qig.part_0-232676'
+2025-03-02 18:29:01,341 [INFO] Stopped: watch?v=5TuyvUx7qig
+2025-03-02 18:40:52,371 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-03 03:42:03,671 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-03 03:46:15,657 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-03 03:48:13,259 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-03 03:51:09,071 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-03 03:51:45,198 [INFO] Video download completed: https://www.youtube.com/watch?v=5TuyvUx7qig
