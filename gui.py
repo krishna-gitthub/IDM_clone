@@ -9,7 +9,7 @@ import os
 from PyQt5.QtWidgets import (QMainWindow, QTableWidget, QTableWidgetItem, QProgressBar,
                              QVBoxLayout, QWidget, QAction, QToolBar, QMenu, QDialog, QLabel,
                              QLineEdit, QPushButton, QFileDialog, QSpinBox, QDateTimeEdit,
-                             QHBoxLayout, QMessageBox, QApplication)
+                             QHBoxLayout, QMessageBox)
 from PyQt5.QtCore import Qt, QTimer, QDateTime
 from download_manager import DownloadManager
 from settings import SettingsManager
@@ -99,12 +99,14 @@ class IDMMainWindow(QMainWindow):
         self.table.setRowCount(len(tasks))
         for row, task in enumerate(tasks):
             self.table.setItem(row, 0, QTableWidgetItem(task.file_name))
-            self.table.setItem(row, 1, QTableWidgetItem(self.human_readable_size(task.file_size)))
+            # For video downloads file_size may not be set; show "N/A" if 0.
+            size_str = self.human_readable_size(task.file_size) if task.file_size else "N/A"
+            self.table.setItem(row, 1, QTableWidgetItem(size_str))
             # Add a progress bar widget to display progress.
             progress_bar = QProgressBar()
             progress_bar.setValue(task.progress)
             self.table.setCellWidget(row, 2, progress_bar)
-            self.table.setItem(row, 3, QTableWidgetItem(f"{task.speed} KB/s"))
+            self.table.setItem(row, 3, QTableWidgetItem(f"{task.speed} KB/s" if task.speed else "N/A"))
             self.table.setItem(row, 4, QTableWidgetItem(task.eta))
             self.table.setItem(row, 5, QTableWidgetItem(task.status))
             
@@ -122,11 +124,12 @@ class IDMMainWindow(QMainWindow):
             row = index.row()
             task = self.download_manager.get_tasks()[row]
             menu = QMenu(self)
-            if task.status == "Downloading":
+            # Only allow pause/resume for direct HTTP downloads (Video tasks handled by yt-dlp are not pausable)
+            if hasattr(task, "pause") and task.status == "Downloading":
                 pause_action = QAction("Pause", self)
                 pause_action.triggered.connect(lambda: self.pause_download(task))
                 menu.addAction(pause_action)
-            elif task.status == "Paused":
+            elif hasattr(task, "resume") and task.status == "Paused":
                 resume_action = QAction("Resume", self)
                 resume_action.triggered.connect(lambda: self.resume_download(task))
                 menu.addAction(resume_action)
@@ -136,20 +139,27 @@ class IDMMainWindow(QMainWindow):
             menu.exec_(self.table.viewport().mapToGlobal(pos))
             
     def pause_download(self, task):
-        self.download_manager.pause_task(task)
+        if hasattr(task, "pause"):
+            task.pause()
         
     def resume_download(self, task):
-        self.download_manager.resume_task(task)
+        if hasattr(task, "resume"):
+            task.resume()
         
     def cancel_download(self, task):
-        self.download_manager.cancel_task(task)
+        if hasattr(task, "cancel"):
+            task.cancel()
         
     def pause_all_downloads(self):
-        self.download_manager.pause_all()
-        
+        for task in self.download_manager.get_tasks():
+            if hasattr(task, "pause") and task.status == "Downloading":
+                task.pause()
+                
     def resume_all_downloads(self):
-        self.download_manager.resume_all()
-        
+        for task in self.download_manager.get_tasks():
+            if hasattr(task, "resume") and task.status == "Paused":
+                task.resume()
+                
     def open_add_dialog(self):
         dialog = AddDownloadDialog(self)
         if dialog.exec_() == QDialog.Accepted:
@@ -161,6 +171,7 @@ class IDMMainWindow(QMainWindow):
         dialog.exec_()
         
     def check_clipboard(self):
+        from PyQt5.QtWidgets import QApplication
         clipboard = QApplication.clipboard()
         text = clipboard.text()
         if self.is_valid_url(text):
@@ -214,8 +225,8 @@ class AddDownloadDialog(QDialog):
         layout.addWidget(self.name_label)
         layout.addWidget(self.name_input)
         
-        # Number of segments/threads
-        self.segments_label = QLabel("Number of Segments/Threads:")
+        # Number of segments/threads (only for direct downloads)
+        self.segments_label = QLabel("Number of Segments/Threads (for HTTP/FTP):")
         self.segments_input = QSpinBox()
         self.segments_input.setMinimum(1)
         self.segments_input.setMaximum(16)

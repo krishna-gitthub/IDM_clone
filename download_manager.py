@@ -1,7 +1,7 @@
 """
 download_manager.py – Contains the core download functionality.
-It implements multi-threaded segmented downloads, resumable transfers, error handling,
-scheduling, and queue management.
+It implements multi-threaded segmented downloads for HTTP/FTP as well as video downloads via yt-dlp,
+along with scheduling and queue management.
 """
 
 import os
@@ -10,6 +10,9 @@ import time
 import requests
 from datetime import datetime
 
+from logger import Logger
+
+# Standard direct download task using segmented download.
 class DownloadTask:
     def __init__(self, url, dest_folder, file_name, segments, schedule_time, settings, logger):
         self.url = url
@@ -159,6 +162,7 @@ class DownloadTask:
         self.pause_event.set()
         self.logger.log(f"Download cancelled: {self.file_name}")
 
+# DownloadManager: Chooses between direct file download and video download (via yt-dlp)
 class DownloadManager:
     def __init__(self, logger, settings):
         self.tasks = []
@@ -167,7 +171,13 @@ class DownloadManager:
         self.lock = threading.Lock()
         
     def add_download(self, url, dest_folder, file_name, segments, schedule_time):
-        task = DownloadTask(url, dest_folder, file_name, segments, schedule_time, settings=self.settings, logger=self.logger)
+        # Determine if the URL is from a video site.
+        if any(domain in url.lower() for domain in ["youtube", "youtu.be", "vimeo", "dailymotion"]):
+            # Use the video downloader via yt-dlp.
+            from video_downloader import VideoDownloadTask
+            task = VideoDownloadTask(url, dest_folder, file_name, schedule_time, settings=self.settings, logger=self.logger)
+        else:
+            task = DownloadTask(url, dest_folder, file_name, segments, schedule_time, settings=self.settings, logger=self.logger)
         with self.lock:
             self.tasks.append(task)
         if schedule_time and schedule_time > datetime.now():
@@ -180,27 +190,30 @@ class DownloadManager:
     def get_tasks(self):
         # Update progress for tasks that are active.
         for task in self.tasks:
-            if task.status in ["Downloading", "Paused"]:
+            if hasattr(task, "update_progress") and task.status in ["Downloading", "Paused"]:
                 task.update_progress()
         return self.tasks
         
     def pause_task(self, task):
-        task.pause()
+        if hasattr(task, "pause"):
+            task.pause()
         
     def resume_task(self, task):
-        task.resume()
+        if hasattr(task, "resume"):
+            task.resume()
         
     def cancel_task(self, task):
-        task.cancel()
+        if hasattr(task, "cancel"):
+            task.cancel()
         
     def pause_all(self):
         for task in self.tasks:
-            if task.status == "Downloading":
+            if hasattr(task, "pause") and task.status == "Downloading":
                 task.pause()
                 
     def resume_all(self):
         for task in self.tasks:
-            if task.status == "Paused":
+            if hasattr(task, "resume") and task.status == "Paused":
                 task.resume()
                 
     def check_scheduled_downloads(self):
