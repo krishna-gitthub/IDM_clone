@@ -106,15 +106,21 @@ class DownloadTask:
 
     def _monitor_progress(self):
         import time
+        self._speed_samples = []
+        last_total = self._total_downloaded
         while not self._stop_event.is_set():
             with self._lock:
-                total_bytes = sum(s.downloaded for s in self._segments)
-                self._total_downloaded = total_bytes
+                current_total = self._total_downloaded
+            delta = current_total - last_total
+            speed_sample = delta / 1024.0  # KB/s for the last second
+            self._speed_samples.append(speed_sample)
+            if len(self._speed_samples) > 5:
+                self._speed_samples.pop(0)
+            avg_speed = sum(self._speed_samples) / len(self._speed_samples)
+            self.speed = avg_speed
+            last_total = current_total
 
             elapsed = (datetime.datetime.now() - self._start_time).total_seconds()
-            if elapsed > 0:
-                self.speed = (self._total_downloaded / 1024) / elapsed  # KB/s
-
             if self.file_size > 0:
                 self.progress = int((self._total_downloaded / self.file_size) * 100)
                 remaining = self.file_size - self._total_downloaded
@@ -124,21 +130,18 @@ class DownloadTask:
                 else:
                     self.eta = "N/A"
             else:
-                # Unknown size
                 self.progress = 0
                 self.eta = "N/A"
 
-            # Check if all segments done
             if all(s.is_finished for s in self._segments):
                 self._merge_segments()
                 if not self._stop_event.is_set():
                     self.status = "Completed"
                 break
 
-            # Attempt dynamic re-segmentation if a segment finished early
             self._attempt_dynamic_segmentation()
-
             time.sleep(1)
+
 
     def _attempt_dynamic_segmentation(self):
         """If a segment finished, find the largest active segment and split it."""
@@ -215,41 +218,41 @@ class DownloadManager:
         self.tasks = []
         self._lock = threading.Lock()
 
-    def add_download(self, url, dest_folder, file_name, segments, schedule_time):
+    def add_download(self, url, dest_folder, file_name, segments, schedule_time, resolution="Best"):
         if not dest_folder:
             dest_folder = self.settings.default_download_dir
         if not os.path.exists(dest_folder):
             os.makedirs(dest_folder, exist_ok=True)
 
-        # Check if it's a known video/streaming site
+        # Check if it's a known video/streaming site.
         if any(domain in url.lower() for domain in ["youtube", "youtu.be", "vimeo", "dailymotion"]):
-            # Use yt-dlp-based VideoDownloadTask
+            from video_downloader import VideoDownloadTask
             task = VideoDownloadTask(
                 url=url,
                 dest_folder=dest_folder,
                 file_name=file_name,
                 schedule_time=schedule_time,
                 settings=self.settings,
-                logger=self.logger
+                logger=self.logger,
+                resolution=resolution
             )
             self.logger.log(f"Detected streaming/video site. Using VideoDownloadTask for {file_name or url}")
         else:
-            # Normal segmented HTTP/FTP download
             task = DownloadTask(url, dest_folder, file_name, segments, schedule_time, self.logger, self.settings)
 
         with self._lock:
             self.tasks.append(task)
 
-        # Check schedule
         now = datetime.datetime.now()
         if schedule_time and schedule_time > now:
             task.status = "Scheduled"
             self.logger.log(f"Download scheduled for {task.file_name} at {schedule_time}")
         else:
-            # Start immediately
+            import threading
             threading.Thread(target=task.start_download, daemon=True).start()
 
         return task
+
 
     def last_task(self):
         with self._lock:

@@ -30,3 +30,20 @@
 2025-03-03 03:48:13,259 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=5TuyvUx7qig
 2025-03-03 03:51:09,071 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=5TuyvUx7qig
 2025-03-03 03:51:45,198 [INFO] Video download completed: https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-03 04:39:14,410 [INFO] Starting download (segmented): 
+2025-03-03 04:39:14,438 [INFO] Error fetching file size for : Invalid URL '': No scheme supplied. Perhaps you meant https://?
+2025-03-03 04:39:14,443 [INFO] Segment download error [C:/Users/krish/OneDrive/Desktop\.part_0-end]: Invalid URL '': No scheme supplied. Perhaps you meant https://?
+2025-03-03 04:40:01,375 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-03 04:40:05,524 [INFO] Video download completed: https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-03 04:40:57,827 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-03 04:45:06,123 [INFO] Video download completed: https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-03 11:54:27,596 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-03 11:54:31,140 [INFO] Error downloading video from https://www.youtube.com/watch?v=5TuyvUx7qig: ERROR: You have requested merging of multiple formats but ffmpeg is not installed. Aborting due to --abort-on-error
+2025-03-03 12:46:47,999 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=5TuyvUx7qig
+2025-03-05 01:26:29,308 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=XBqcriPvDEE
+2025-03-05 01:26:48,074 [INFO] Video download completed: https://www.youtube.com/watch?v=XBqcriPvDEE
+2025-03-05 01:26:50,003 [INFO] Video download completed: https://www.youtube.com/watch?v=XBqcriPvDEE
+2025-03-05 01:49:48,602 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=zn2ukSnDqSg
+2025-03-05 01:52:00,554 [INFO] Video download completed: https://www.youtube.com/watch?v=zn2ukSnDqSg
+2025-03-05 01:52:02,310 [INFO] Video download completed: https://www.youtube.com/watch?v=zn2ukSnDqSg
+2025-03-05 01:55:10,922 [INFO] Detected streaming/video site. Using VideoDownloadTask for https://www.youtube.com/watch?v=zn2ukSnDqSg

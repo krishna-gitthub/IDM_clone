@@ -10,7 +10,7 @@ import datetime
 import yt_dlp
 
 class VideoDownloadTask:
-    def __init__(self, url, dest_folder, file_name, schedule_time, settings, logger):
+    def __init__(self, url, dest_folder, file_name, schedule_time, settings, logger, resolution="Best"):
         self.url = url
         self.dest_folder = dest_folder
         # Use custom file name if provided; otherwise, let yt-dlp decide.
@@ -18,14 +18,15 @@ class VideoDownloadTask:
         self.schedule_time = schedule_time
         self.settings = settings
         self.logger = logger
-
-        # UI properties required by the main window
-        self.date_added = datetime.datetime.now()  # Added to resolve the error
+        self.resolution = resolution  # Desired resolution (e.g. "1080p", "720p", "Best")
+        
+        # UI properties expected by the main window
+        self.date_added = datetime.datetime.now()
         self.status = "Queued"
         self.progress = 0
-        self.file_size = 0  # Updated when download starts
-        self.speed = 0      # Speed in KB/s (updated if provided by yt-dlp)
-        self.eta = "N/A"    # Estimated time remaining
+        self.file_size = 0
+        self.speed = 0
+        self.eta = "N/A"
 
     def start(self):
         self.status = "Downloading"
@@ -40,7 +41,14 @@ class VideoDownloadTask:
             'progress_hooks': [self.progress_hook],
             'noplaylist': True,
         }
-        # Optionally set user-agent if provided.
+        # If resolution is not "Best", set format filter.
+        if self.resolution.lower() != "best":
+            try:
+                height = int(self.resolution.lower().replace("p", ""))
+                ydl_opts['format'] = f'bestvideo[height<={height}]+bestaudio/best[height<={height}]'
+            except Exception as e:
+                self.logger.log(f"Error setting resolution: {e}")
+        # Set custom user-agent if provided.
         if self.settings.user_agent:
             ydl_opts['http_headers'] = {'User-Agent': self.settings.user_agent}
             
@@ -52,7 +60,7 @@ class VideoDownloadTask:
                 self.status = "Error"
 
     def start_download(self):
-        # Alias so that DownloadManager can call start_download() on all tasks.
+        # Alias so that DownloadManager can call start_download() on any task.
         self.start()
 
     def progress_hook(self, d):
@@ -70,12 +78,10 @@ class VideoDownloadTask:
                 self.file_size = total
             else:
                 self.progress = 0
-            # Update speed if available (convert from bytes/s to KB/s)
             if d.get('speed'):
                 self.speed = d.get('speed') / 1024.0
             else:
                 self.speed = 0
-            # Update ETA if available (d['eta'] is in seconds)
             if d.get('eta'):
                 self.eta = time.strftime("%H:%M:%S", time.gmtime(d.get('eta')))
             else:
